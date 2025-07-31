@@ -24,37 +24,42 @@
 
 class block_weekly_tip extends block_base {
 
-    // 1 Inicializa el bloque (define su título)
+    // 1 Initializes the block (sets its title)
     public function init() {
-        // Usa el texto definido en lang/en/block_weekly_tip.php
+        // Uses the text defined in lang/en/block_weekly_tip.php
         $this->title = get_string('pluginname', 'block_weekly_tip');
     }
 
-    // 2 Devuelve el contenido del bloque
+    // 2 Returns the block content
     public function get_content() {
 
-        // Si el contenido ya está cargado, lo devuelve
+        // If the content is already loaded, return it
         if ($this->content !== null) {
             return $this->content;
         }
 
-        // Crea un objeto vacío para el contenido
+        // Create an empty object for the content
         $this->content = new stdClass();
 
-        // Aquí irá el texto que se muestra en el bloque
-        $this->content->text = 'Hello world!';
+        // Here goes the text that will be displayed in the block
+        $this->content->text = get_weekly_tip();
 
-        // Pie de página (lo dejamos vacío)
+        // Footer (we leave it empty)
         $this->content->footer = '';
 
         return $this->content;
     }
 }
 
+/**
+ * Function to get a weekly tip
+ *
+ * This function returns a tip based on the current week number.
+ * It cycles through a predefined list of tips.
+ *
+ * @return string A weekly tip for the user
+ */
 
-
-
-// this block provides a weekly tip to users
 function get_weekly_tip() {
     $tips = [
         'Did you know you can customize your dashboard?',
@@ -64,7 +69,7 @@ function get_weekly_tip() {
         'Explore new plugins to enhance your Moodle experience.'
     ];
     
-    $actual_week = date('W');
-    $tip_index = $actual_week % count($tips);
+    $actual_week = date('W'); // Current week number (1–52)
+    $tip_index = ($actual_week - 1) % count($tips); // Ensures tips show in order
     return $tips[$tip_index];
 }
