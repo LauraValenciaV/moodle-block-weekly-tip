@@ -62,11 +62,11 @@ class block_weekly_tip extends block_base {
 
 function get_weekly_tip() {
     $tips = [
-        'Did you know you can customize your dashboard?',
-        'Check out the latest updates in the Moodle community.',
-        'Remember to back up your courses regularly.',
-        'Engage with your peers in the forums for better learning.',
-        'Explore new plugins to enhance your Moodle experience.'
+        get_string('tip1', 'block_weekly_tip'),
+        get_string('tip2', 'block_weekly_tip'),
+        get_string('tip3', 'block_weekly_tip'),
+        get_string('tip4', 'block_weekly_tip'),
+        get_string('tip5', 'block_weekly_tip')
     ];
     
     $actual_week = date('W'); // Current week number (1–52)

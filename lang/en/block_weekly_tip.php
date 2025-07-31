@@ -26,3 +26,8 @@ $string['pluginname'] = 'Weekly Tip';
 $string['weekly_tip:addinstance'] = 'Add a new Weekly Tip block';
 $string['weekly_tip:myaddinstance'] = 'Add a new Weekly Tip block to the My Moodle page';
 
+$string['tip1'] = 'Did you know you can customize your dashboard?';
+$string['tip2'] = 'Check out the latest updates in the Moodle community.';
+$string['tip3'] = 'Remember to back up your courses regularly.';
+$string['tip4'] = 'Engage with your peers in the forums for better learning.';
+$string['tip5'] = 'Explore new plugins to enhance your Moodle experience.';
