@@ -15,19 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_weekly_tip', language 'en'
+ * Language strings for component 'block_weekly_tip', language 'en'
  *
  * @package   block_weekly_tip
  * @copyright 2025 Laura Valencia
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Plugin name (shown in the block list).
 $string['pluginname'] = 'Weekly Tip';
+
+// Capabilities (permissions to add the block).
 $string['weekly_tip:addinstance'] = 'Add a new Weekly Tip block';
 $string['weekly_tip:myaddinstance'] = 'Add a new Weekly Tip block to the My Moodle page';
 
+// Block settings: custom text label for the configuration form.
+$string['tiptext'] = 'Custom tip text';
+
+// Default tips shown in the block (these can be rotated or displayed randomly).
 $string['tip1'] = 'Did you know you can customize your dashboard?';
 $string['tip2'] = 'Check out the latest updates in the Moodle community.';
 $string['tip3'] = 'Remember to back up your courses regularly.';
 $string['tip4'] = 'Engage with your peers in the forums for better learning.';
 $string['tip5'] = 'Explore new plugins to enhance your Moodle experience.';
+
+// Admin settings strings.
+$string['globaltips'] = 'Global tips (one per line)';
+$string['globaltips_desc'] = 'These tips will be shown site-wide. Enter one tip per line. The block will display one tip per week, cycling in order.';
+
+// Local tips strings (for teachers when editing the block in a course).
+$string['localtips'] = 'Local tips (one per line)';
+$string['localtips_desc'] = 'These tips will only apply to this course. Enter one tip per line. The block will display one tip per week, cycling in order.';
