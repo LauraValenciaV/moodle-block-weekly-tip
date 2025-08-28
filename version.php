@@ -24,6 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025082100;        // Version (YYYYMMDDXX)
+$plugin->version   = 2025082500;        // Version (YYYYMMDDXX)
 $plugin->requires  = 2022041900;        // Minimum Moodle version required
 $plugin->component = 'block_weekly_tip'; // Full name of the plugin

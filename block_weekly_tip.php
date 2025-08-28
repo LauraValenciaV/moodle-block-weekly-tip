@@ -15,116 +15,114 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Weekly Tip block
+ * Weekly Tip block.
  *
  * @package   block_weekly_tip
- * @copyright 2025 Laura Valencia
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 class block_weekly_tip extends block_base {
 
-    // Initializes the block (sets its title)
+    /**
+     * Initialize the block.
+     */
     public function init() {
-        // Uses the text defined in lang/en/block_weekly_tip.php
         $this->title = get_string('pluginname', 'block_weekly_tip');
     }
 
+    /**
+     * Apply custom title if set.
+     */
     public function specialization() {
-        // This method can be used to customize the block for different contexts
-        // For example, you could set a different title or content based on the user's role
-        if (is_siteadmin()){
-            $this->title = 'Admin Weekly Tip';
-        } else {
-            $this->title = 'Weekly Tip';
+        if (!empty($this->config->title)) {
+            $this->title = $this->config->title;
         }
     }
 
-    // Defines where the block can be used
+    /**
+     * Where the block can appear.
+     *
+     * @return array
+     */
     public function applicable_formats() {
-    return [
-        'site-index' => true,   // Main site homepage
-        'course-view' => true,  // Course pages
-        'my' => true           // Do not show in the user dashboard
+        return [
+            'site-index' => true,   // Main site homepage
+            'course-view' => true,  // Course pages
+            'my' => true           // Allow in the user dashboard
         ];
     }
 
-    // Returns the block content
+    /**
+     * Generate the block content.
+     *
+     * @return stdClass|null
+     */
     public function get_content() {
         if ($this->content !== null) {
             return $this->content;
         }
 
         $this->content = new stdClass();
+        $this->content->text = '';
+        $this->content->footer = '';
 
-        // -----------------------------
-        // 1. Check LOCAL tips (professor/course level)
-        // -----------------------------
-        $tips = [];
-        if (!empty($this->config->localtips)) {
-            $tips = array_filter(array_map('trim', preg_split("/\r\n|\n|\r/", $this->config->localtips)));
-        }
+        $tip = $this->get_weekly_tip();
+        $this->content->text = '<div class="weekly-tip-content">' . $tip . '</div>';
 
-        // -----------------------------
-        // 2. If no local tips → check GLOBAL tips (admin level)
-        // -----------------------------
-        if (empty($tips)) {
-            $global = get_config('block_weekly_tip', 'globaltips');
-            if (!empty($global)) {
-                $tips = array_filter(array_map('trim', preg_split("/\r\n|\n|\r/", $global)));
-            }
-        }
-
-        // -----------------------------
-        // 3. If no local/global tips → fallback to default tips (your get_weekly_tip())
-        // -----------------------------
-        if (empty($tips)) {
-            $selectedtip = $this->get_weekly_tip(); // use default tips
-        } else {
-            // Rotate tips weekly
-            $week = (int)date('W'); // current week number (1–52)
-            $index = $week % count($tips);          // Rotate deterministically by week
-            $selectedtip = $tips[$index];
-        }
-
-        // Render (plain HTML while you learn; later you can use html_writer).
-        $this->content->text = '<div class="weekly-tip">'. $selectedtip .'</div>';
-
-        return $this->content;   // <-- ESTO FALTABA
+        return $this->content;
     }
 
     /**
-     * Determines whether multiple instances of this block can be added to the same page.
-     * Returning false means only one instance of this block can exist per page.
+     * Allow multiple instances in the same page.
      *
      * @return bool
      */
     public function instance_allow_multiple() {
-        return false; // If set to false, users cannot add more than one instance of this block to the same page.
+        return true;
     }
 
     /**
-     * Function to get a weekly tip
+     * Get the tip for the current week.
      *
-     * This function returns a tip based on the current week number. (shown if no global/local exist)
-     * It cycles through a predefined list of tips.
-     *
-     * @return string A weekly tip for the user
+     * @return string
      */
+    private function get_weekly_tip() {
+        global $CFG;
 
-    public function get_weekly_tip() {
-        $tips = [
-            get_string('tip1', 'block_weekly_tip'),
-            get_string('tip2', 'block_weekly_tip'),
-            get_string('tip3', 'block_weekly_tip'),
-            get_string('tip4', 'block_weekly_tip'),
-            get_string('tip5', 'block_weekly_tip')
-        ];
-        
-        $actual_week = date('W'); // Current week number (1–52)
-        $tip_index = ($actual_week - 1) % count($tips); // Ensures tips show in order
-        return $tips[$tip_index];
+        // Local tips (per block instance).
+        $tips = [];
+        if (!empty($this->config->localtips)) {
+            $tips = array_filter(array_map('trim', explode("\n", $this->config->localtips)));
+        }
+
+        // Global tips (from site config).
+        $globaltips = get_config('block_weekly_tip', 'globaltips');
+        if (!empty($globaltips)) {
+            $tips = array_merge($tips, array_filter(array_map('trim', explode("\n", $globaltips))));
+        }
+
+        if (empty($tips)) {
+            // Fallback: usar los tips del lang.
+            $defaulttips = [];
+            for ($i = 1; $i <= 5; $i++) {
+                $stringid = 'tip' . $i;
+                if (get_string_manager()->string_exists($stringid, 'block_weekly_tip')) {
+                    $defaulttips[] = get_string($stringid, 'block_weekly_tip');
+                }
+            }
+            $tips = $defaulttips;
+        }
+
+        if (empty($tips)) {
+            return get_string('notipsavailable', 'block_weekly_tip');
+        }
+
+        // Select tip based on current ISO week number.
+        $week = (int)date('W');
+        $index = $week % max(1, count($tips));
+        $selectedtip = $tips[$index];
+
+        return format_text($selectedtip, FORMAT_HTML);
     }
-    
 }
-

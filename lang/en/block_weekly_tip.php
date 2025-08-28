@@ -46,3 +46,12 @@ $string['globaltips_desc'] = 'These tips will be shown site-wide. Enter one tip 
 // Local tips strings (for teachers when editing the block in a course).
 $string['localtips'] = 'Local tips (one per line)';
 $string['localtips_desc'] = 'These tips will only apply to this course. Enter one tip per line. The block will display one tip per week, cycling in order.';
+
+// Capability: permission to manage local tips in the block.
+$string['weekly_tip:managelocaltips'] = 'Manage local tips for Weekly Tip block';
+
+// Message shown when user does not have permission to edit local tips.
+$string['nopermission'] = 'You do not have permission to edit local tips in this block.';
+
+// Message shown when there are no tips available (fallback case).
+$string['notipsavailable'] = 'No tips available';
